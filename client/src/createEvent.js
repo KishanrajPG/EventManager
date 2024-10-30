@@ -42,6 +42,8 @@ function CreateEvent() {
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Clear the token from local storage
+        localStorage.removeItem('role'); // Clear the token from local storage
+
         navigate('/login'); // Redirect to the login page
     };
 

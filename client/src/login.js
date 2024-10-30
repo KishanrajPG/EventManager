@@ -16,22 +16,26 @@ const Login = () => {
             const response = await axios.post('http://localhost:4000/api/login', { email, password });
             // Handle successful login
             console.log(response.data);
-            const { token, role } = response.data; // Extract the token and role from response
-            
-            // Store the token in localStorage or sessionStorage
-            localStorage.setItem('token', token); // You can also use sessionStorage
+            const { token, role, email: userEmail, userid } = response.data; // Rename extracted email to avoid conflict
+    
+            // Store the token, role, and email in localStorage or sessionStorage
+            localStorage.setItem('token', token);
+            localStorage.setItem('role', role);
+            localStorage.setItem('email', userEmail); // Use renamed variable
+            localStorage.setItem('userid', userid); // Use renamed variable
 
             // Redirect based on role
             if (role === 'student') {
-                navigate('/home'); // Navigate to /home for students
+                navigate('/home');
             } else if (role === 'admin') {
-                navigate('/createEvent'); // Navigate to /createEvent for admins
+                navigate('/createEvent');
             }
         } catch (error) {
             console.error('Login error:', error);
-            setError('Invalid credentials, please try again.'); // Set error message for user feedback
+            setError('Invalid credentials, please try again.');
         }
     };
+    
 
     return (
         <div className="auth-container">

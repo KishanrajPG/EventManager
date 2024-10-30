@@ -42,7 +42,7 @@ app.post('/api/login', async (req, res) => {
     if (user && await bcrypt.compare(password, user.password)) {
         // Generate JWT token including role
         const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: 'Login successful', token, role: user.role }); // Send role in the response
+        res.json({ message: 'Login successful', token, role: user.role , email: user.email, userid : user._id}); // Send role in the response
     } else {
         res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -130,6 +130,50 @@ app.delete('/api/events/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+const Registration = require('./models/registration'); // Import the Registration model
+
+app.post('/api/register-student', authenticateToken, async (req, res) => {
+    const { event_id, candidateEmails, attendance = null, score = null } = req.body;
+    const student_id = req.user.id; // Assuming `authenticateToken` attaches user details
+
+    try {
+        const registrationCount = await Registration.countDocuments();
+        const registration_id = registrationCount + 1;
+
+        const registration = new Registration({
+            registration_id,
+            event_id,
+            student_id,
+            candidateEmails,
+            attendance,
+            score
+        });
+
+        await registration.save();
+        res.status(201).json({ message: 'Student registered successfully', registration });
+    } catch (error) {
+        console.error('Error registering student:', error);
+        res.status(500).json({ message: 'Error registering student', error: error.message });
+    }
+});
+
+app.get('/api/registrations', authenticateToken, async (req, res) => {
+    try {
+        // Find all registrations without filtering
+        const registrations = await Registration.find({});
+
+        if (registrations.length === 0) {
+            return res.status(404).json({ message: 'No registrations found' });
+        }
+
+        res.status(200).json({ registrations });
+    } catch (error) {
+        console.error('Error retrieving registrations:', error);
+        res.status(500).json({ message: 'Error retrieving registrations', error: error.message });
+    }
+});
+
 
 
 // Connect to MongoDB and start the server

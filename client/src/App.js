@@ -8,6 +8,8 @@ import Home from './home';
 import CreateEvent from './createEvent';
 
 function App() {
+  const role = localStorage.getItem("role"); 
+
   return (
     <Router>
       <div className="App">
@@ -15,8 +17,9 @@ function App() {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/createEvent" element={<CreateEvent />} />
+          {/* Conditional rendering based on role */}
+          <Route path="/home" element={role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />} />
+          <Route path="/createEvent" element={role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />} />
         </Routes>
       </div>
     </Router>
