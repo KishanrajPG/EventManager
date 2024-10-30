@@ -11,7 +11,7 @@ function Home() {
     const [candidateEmails, setCandidateEmails] = useState(['']);
 
     useEffect(() => {
-      console.log(localStorage.getItem("userid"))
+        console.log(localStorage.getItem("userid"));
         fetchEvents();
         fetchRegistrations();
     }, []);
@@ -41,69 +41,70 @@ function Home() {
     };
 
     const fetchRegistrations = async () => {
-      try {
-          const response = await fetch('http://localhost:4000/api/registrations', {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-          });
-          if (!response.ok) {
-              throw new Error('Failed to fetch events: ' + response.statusText);
-          }
-          const res = await response.json();
-          console.log(res.registrations)
-          setRegisters(res.registrations)
-      } catch (error) {
-          console.error('Error fetching events:', error);
-      }
-  };
+        try {
+            const response = await fetch('http://localhost:4000/api/registrations', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch registrations: ' + response.statusText);
+            }
+            const res = await response.json();
+            console.log(res.registrations);
+            setRegisters(res.registrations);
+        } catch (error) {
+            console.error('Error fetching registrations:', error);
+        }
+    };
 
     const handleRegister = async (eventId, type) => {
         if (type === 'team') {
             setSelectedEventId(eventId);
             setShowModal(true);
         } else {
-            const userEmail = localStorage.getItem('email'); 
+            const userEmail = localStorage.getItem('email');
             await registerEvent(eventId, []);
         }
     };
 
     const registerEvent = async (eventId, emails) => {
-      try {
-          // Get the logged-in user's email from localStorage
-          const userEmail = localStorage.getItem('email');
-  
-          // Add the user's email to the candidateEmails array
-          const updatedEmails = [...emails, userEmail];
-  
-          const response = await fetch(`http://localhost:4000/api/register-student`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({ event_id: eventId, candidateEmails: updatedEmails })
-          });
-  
-          if (response.ok) {
-              alert('Registration successful!');
-              setShowModal(false);
-              setCandidateEmails(['']); // Reset candidate emails
-              fetchRegistrations();
-          } else {
-              throw new Error('Registration failed');
-          }
-      } catch (error) {
-          console.error('Error registering for event:', error);
-      }
-  };
-  
+        try {
+            // Get the logged-in user's email from localStorage
+            const userEmail = localStorage.getItem('email');
+
+            // Add the user's email to the candidateEmails array
+            const updatedEmails = [...emails, userEmail];
+
+            const response = await fetch(`http://localhost:4000/api/register-student`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ event_id: eventId, candidateEmails: updatedEmails })
+            });
+
+            if (response.ok) {
+                alert('Registration successful!');
+                setShowModal(false);
+                setCandidateEmails(['']); // Reset candidate emails
+                fetchRegistrations();
+            } else {
+                throw new Error('Registration failed');
+            }
+        } catch (error) {
+            console.error('Error registering for event:', error);
+        }
+    };
+
     const isRegistered = (eventId) => {
-      return registers.some(
-          (registration) => registration.event_id === eventId && registration.student_id === localStorage.getItem("userid")
-      );
-  };
+        return registers.some(
+            (registration) => registration.event_id === eventId && registration.student_id === localStorage.getItem("userid")
+        );
+    };
+
     const addEmailField = () => setCandidateEmails([...candidateEmails, '']);
 
     const removeEmailField = (index) => {
@@ -118,9 +119,18 @@ function Home() {
         setCandidateEmails(updatedEmails);
     };
 
+    // Email validation function
+    const isValidEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    };
+
     const handleConfirmRegistration = () => {
         registerEvent(selectedEventId, candidateEmails);
     };
+
+    // Check if all emails are valid
+    const allEmailsValid = candidateEmails.every(email => isValidEmail(email));
 
     return (
         <div className="container mt-4">
@@ -192,6 +202,7 @@ function Home() {
                                                 Remove
                                             </button>
                                         )}
+                                        {!isValidEmail(email) && <div className="text-danger">Invalid email format</div>}
                                     </div>
                                 ))}
                                 <button className="btn btn-secondary mt-2" onClick={addEmailField}>
@@ -199,7 +210,9 @@ function Home() {
                                 </button>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={handleConfirmRegistration}>
+                                <button type="button" className="btn btn-primary" 
+                                        onClick={handleConfirmRegistration} 
+                                        disabled={!allEmailsValid}>
                                     Confirm Registration
                                 </button>
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>

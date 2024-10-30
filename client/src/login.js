@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Auth.css'; // Ensure the correct path for your CSS file
+import './Auth.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './Authcontext'; // Import the useAuth hook
 
 const Login = () => {
+    const { setRole } = useAuth(); // Get the setRole function from context
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // State to hold error messages
-    const navigate = useNavigate(); // Hook for programmatic navigation
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Perform login logic
             const response = await axios.post('http://localhost:4000/api/login', { email, password });
-            // Handle successful login
             console.log(response.data);
-            const { token, role, email: userEmail, userid } = response.data; // Rename extracted email to avoid conflict
-    
-            // Store the token, role, and email in localStorage or sessionStorage
+            const { token, role, email: userEmail, userid } = response.data;
+
             localStorage.setItem('token', token);
             localStorage.setItem('role', role);
-            localStorage.setItem('email', userEmail); // Use renamed variable
-            localStorage.setItem('userid', userid); // Use renamed variable
+            localStorage.setItem('email', userEmail);
+            localStorage.setItem('userid', userid);
 
-            // Redirect based on role
+            setRole(role); // Update role in the context
+
             if (role === 'student') {
                 navigate('/home');
             } else if (role === 'admin') {
@@ -35,13 +35,12 @@ const Login = () => {
             setError('Invalid credentials, please try again.');
         }
     };
-    
 
     return (
         <div className="auth-container">
             <h2 className="auth-title">Login</h2>
             <form onSubmit={handleSubmit}>
-                {error && <div className="error-message">{error}</div>} {/* Display error message */}
+                {error && <div className="error-message">{error}</div>}
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <input

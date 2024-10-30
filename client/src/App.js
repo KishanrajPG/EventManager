@@ -6,9 +6,23 @@ import Register from './Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './home';
 import CreateEvent from './createEvent';
+import { AuthProvider, useAuth } from './Authcontext';
 
 function App() {
-  const role = localStorage.getItem("role"); 
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}
+
+const MainApp = () => {
+  const { role, loading } = useAuth();
+
+  // While loading, you can show a loading indicator or nothing at all
+  if (loading) {
+    return <div>Loading...</div>; // Or any loading spinner you prefer
+  }
 
   return (
     <Router>

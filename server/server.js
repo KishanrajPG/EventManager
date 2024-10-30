@@ -160,19 +160,45 @@ app.post('/api/register-student', authenticateToken, async (req, res) => {
 
 app.get('/api/registrations', authenticateToken, async (req, res) => {
     try {
-        // Find all registrations without filtering
+        // Find all registrations
         const registrations = await Registration.find({});
 
         if (registrations.length === 0) {
             return res.status(404).json({ message: 'No registrations found' });
         }
 
-        res.status(200).json({ registrations });
+        // Collect all student IDs to fetch their details in a single query
+        const studentIds = registrations.map(reg => reg.student_id);
+
+        // Fetch student details for all student IDs
+        const students = await User.find({ _id: { $in: studentIds } }).select('name email _id'); // Fetch name, email, and _id
+
+        // Create a map to easily access student details by ID
+        const studentMap = {};
+        students.forEach(student => {
+            studentMap[student._id] = { name: student.name, email: student.email };
+        });
+
+        // Prepare the response with registrations and corresponding student details
+        const registrationDetails = registrations.map(registration => ({
+            registration_id: registration.registration_id,
+            event_id: registration.event_id,
+            student_id: registration.student_id,
+            candidateEmails: registration.candidateEmails,
+            attendance: registration.attendance,
+            score: registration.score,
+            student_name: studentMap[registration.student_id]?.name || null, // Get student name from map
+            student_email: studentMap[registration.student_id]?.email || null  // Get student email from map
+        }));
+
+        res.status(200).json({ registrations: registrationDetails });
     } catch (error) {
         console.error('Error retrieving registrations:', error);
         res.status(500).json({ message: 'Error retrieving registrations', error: error.message });
     }
 });
+
+
 
 
 
