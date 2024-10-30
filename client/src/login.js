@@ -16,13 +16,17 @@ const Login = () => {
             const response = await axios.post('http://localhost:4000/api/login', { email, password });
             // Handle successful login
             console.log(response.data);
-            const { token } = response.data; // Extract the token from response
+            const { token, role } = response.data; // Extract the token and role from response
             
             // Store the token in localStorage or sessionStorage
             localStorage.setItem('token', token); // You can also use sessionStorage
 
-            // Redirect to a protected route or dashboard
-            navigate('/home'); // Change to the route you want to redirect after login
+            // Redirect based on role
+            if (role === 'student') {
+                navigate('/home'); // Navigate to /home for students
+            } else if (role === 'admin') {
+                navigate('/createEvent'); // Navigate to /createEvent for admins
+            }
         } catch (error) {
             console.error('Login error:', error);
             setError('Invalid credentials, please try again.'); // Set error message for user feedback

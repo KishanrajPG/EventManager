@@ -5,6 +5,8 @@ import Login from './login';
 import Register from './Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './home';
+import CreateEvent from './createEvent';
+
 function App() {
   return (
     <Router>
@@ -14,7 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
-
+          <Route path="/createEvent" element={<CreateEvent />} />
         </Routes>
       </div>
     </Router>
