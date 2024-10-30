@@ -198,6 +198,35 @@ app.get('/api/registrations', authenticateToken, async (req, res) => {
     }
 });
 
+app.get('/api/registrations/event/:eventId', authenticateToken, async (req, res) => {
+    const eventId = req.params.eventId;
+
+    try {
+        // Find registrations by event ID
+        const registrations = await Registration.find({ event_id: eventId }).populate('student_id', 'name email _id');
+
+        if (registrations.length === 0) {
+            return res.status(404).json({ message: 'No registrations found for this event' });
+        }
+
+        // Prepare the response
+        const registrationDetails = registrations.map(registration => ({
+            registration_id: registration.registration_id,
+            event_id: registration.event_id,
+            student_id: registration.student_id._id,
+            candidateEmails: registration.candidateEmails,
+            attendance: registration.attendance,
+            score: registration.score,
+            student_name: registration.student_id.name,
+            student_email: registration.student_id.email
+        }));
+
+        res.status(200).json({ registrations: registrationDetails });
+    } catch (error) {
+        console.error('Error retrieving registrations for event:', error);
+        res.status(500).json({ message: 'Error retrieving registrations', error: error.message });
+    }
+});
 
 
 

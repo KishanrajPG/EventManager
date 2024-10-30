@@ -116,7 +116,10 @@ function CreateEvent() {
         }
     };
     
-
+    const handleView = (eventId) => {
+        navigate(`/viewEvent/${eventId}`); // Pass the event ID in the URL
+    };
+    
     const handleEdit = (event) => {
         setCurrentEvent({
             ...event,
@@ -151,8 +154,11 @@ function CreateEvent() {
                                 <Button variant="warning" onClick={() => handleEdit(event)} className="me-2">
                                     Edit
                                 </Button>
-                                <Button variant="danger" onClick={() => handleDelete(event._id)}>
+                                <Button variant="danger" onClick={() => handleDelete(event._id)} className="me-2">
                                     Delete
+                                </Button>
+                                <Button variant="danger" onClick={() => handleView(event._id)}>
+                                    View
                                 </Button>
                             </td>
                         </tr>

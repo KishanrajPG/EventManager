@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './home';
 import CreateEvent from './createEvent';
 import { AuthProvider, useAuth } from './Authcontext';
+import ViewEvent from './View';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ const MainApp = () => {
           {/* Conditional rendering based on role */}
           <Route path="/home" element={role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />} />
           <Route path="/createEvent" element={role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />} />
+          <Route path="/viewEvent/:eventId" element={role === 'admin' ? <ViewEvent /> : <Navigate to="/home" replace />} />
         </Routes>
       </div>
     </Router>
