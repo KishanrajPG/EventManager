@@ -6,12 +6,9 @@ const User = require('./models/user'); // Assuming you have a User model defined
 const app = express();
 const cors = require('cors'); // Import CORS
 const nodemailer = require('nodemailer');
+const PORT = process.env.PORT || 4000;
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+app.use(cors());
 
 
 app.use(express.json());
@@ -321,5 +318,5 @@ app.put('/api/registrations/:registrationId', authenticateToken, async (req, res
 
 // Connect to MongoDB and start the server
 mongoose.connect('mongodb+srv://Kishanrajpg:EventDB%402024@eventdb.kuq2x.mongodb.net/?retryWrites=true&w=majority&appName=EventDB')
-    .then(() => app.listen(4000, () => console.log('Server running on port 4000')))
+    .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
     .catch(err => console.log(err));

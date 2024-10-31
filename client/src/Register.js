@@ -16,7 +16,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:4000/api/register', { name, email, password, role });
+            const response = await axios.post('https://eventmanagerbackend-bbxp.onrender.com/api/register', { name, email, password, role });
             console.log('Registration successful:', response.data);
     
             setName('');

@@ -19,7 +19,7 @@ function CreateEvent() {
     
     const fetchEvents = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/events', {
+            const response = await fetch('https://eventmanagerbackend-bbxp.onrender.com/api/events', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}` // JWT token from local storage
@@ -58,7 +58,7 @@ function CreateEvent() {
         if (!confirmDelete) return;
     
         try {
-            const response = await fetch(`http://localhost:4000/api/events/${id}`, {
+            const response = await fetch(`https://eventmanagerbackend-bbxp.onrender.com/api/events/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -88,8 +88,8 @@ function CreateEvent() {
         try {
             const method = currentEvent._id ? 'PUT' : 'POST'; // Determine method based on whether editing an existing event
             const url = currentEvent._id 
-                ? `http://localhost:4000/api/events/${currentEvent._id}` 
-                : `http://localhost:4000/api/events`;
+                ? `https://eventmanagerbackend-bbxp.onrender.com/api/events/${currentEvent._id}` 
+                : `https://eventmanagerbackend-bbxp.onrender.com/api/events`;
     
             const response = await fetch(url, {
                 method,

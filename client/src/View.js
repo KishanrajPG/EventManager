@@ -15,7 +15,7 @@ function ViewEvent() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/events', {
+            const response = await fetch('https://eventmanagerbackend-bbxp.onrender.com/api/events', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -33,7 +33,7 @@ function ViewEvent() {
 
     const fetchRegistrations = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/api/registrations/event/${eventId}`, {
+            const response = await fetch(`https://eventmanagerbackend-bbxp.onrender.com/api/registrations/event/${eventId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -60,7 +60,7 @@ function ViewEvent() {
 
     const updateRegistration = async (registrationId, updatedFields) => {
         try {
-            const response = await fetch(`http://localhost:4000/api/registrations/${registrationId}`, {
+            const response = await fetch(`https://eventmanagerbackend-bbxp.onrender.com/api/registrations/${registrationId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -14,7 +14,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:4000/api/login', { email, password });
+            const response = await axios.post('https://eventmanagerbackend-bbxp.onrender.com/api/login', { email, password });
             console.log(response.data);
             const { token, role, email: userEmail, userid } = response.data;
 
