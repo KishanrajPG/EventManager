@@ -70,34 +70,43 @@ function Home() {
     };
 
     const registerEvent = async (eventId, emails) => {
-        try {
-            // Get the logged-in user's email from localStorage
-            const userEmail = localStorage.getItem('email');
-
-            // Add the user's email to the candidateEmails array
-            const updatedEmails = [...emails, userEmail];
-
-            const response = await fetch(`http://localhost:4000/api/register-student`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ event_id: eventId, candidateEmails: updatedEmails })
-            });
-
-            if (response.ok) {
-                alert('Registration successful!');
-                setShowModal(false);
-                setCandidateEmails(['']); // Reset candidate emails
-                fetchRegistrations();
-            } else {
-                throw new Error('Registration failed');
-            }
-        } catch (error) {
-            console.error('Error registering for event:', error);
-        }
-    };
+      try {
+          // Get the logged-in user's email from localStorage
+          const userEmail = localStorage.getItem('email');
+  
+          // Add the user's email to the candidateEmails array
+          const updatedEmails = [...emails, userEmail];
+  
+          const response = await fetch(`http://localhost:4000/api/register-student`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${localStorage.getItem('token')}`
+              },
+              body: JSON.stringify({ event_id: eventId, candidateEmails: updatedEmails })
+          });
+  
+          if (response.ok) {
+              alert('Registration successful!');
+              setShowModal(false);
+              setCandidateEmails(['']); // Reset candidate emails
+              fetchRegistrations();
+          } else {
+              const errorData = await response.json();
+              const errorMessage = errorData.message;
+              
+              if (errorData.missingEmails) {
+                  // Show missing emails in alert if they are present in the error
+                  alert(`${errorMessage}: ${errorData.missingEmails.join(', ')}`);
+              } else {
+                  alert(errorMessage);
+              }
+          }
+      } catch (error) {
+          console.error('Error:', error);
+          alert('An unexpected error occurred. Please try again.');
+      }
+  };  
 
     const isRegistered = (eventId) => {
         return registers.some(

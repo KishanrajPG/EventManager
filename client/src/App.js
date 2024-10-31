@@ -17,12 +17,16 @@ function App() {
   );
 }
 
+const ProtectedRoute = ({ children }) => {
+  const { role } = useAuth();
+  return role ? children : <Navigate to="/login" replace />;
+};
+
 const MainApp = () => {
   const { role, loading } = useAuth();
 
-  // While loading, you can show a loading indicator or nothing at all
   if (loading) {
-    return <div>Loading...</div>; // Or any loading spinner you prefer
+    return <div>Loading...</div>;
   }
 
   return (
@@ -32,14 +36,36 @@ const MainApp = () => {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Conditional rendering based on role */}
-          <Route path="/home" element={role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />} />
-          <Route path="/createEvent" element={role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />} />
-          <Route path="/viewEvent/:eventId" element={role === 'admin' ? <ViewEvent /> : <Navigate to="/home" replace />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                {role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/createEvent"
+            element={
+              <ProtectedRoute>
+                {role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/viewEvent/:eventId"
+            element={
+              <ProtectedRoute>
+                {role === 'admin' ? <ViewEvent /> : <Navigate to="/home" replace />}
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
   );
-}
+};
 
 export default App;

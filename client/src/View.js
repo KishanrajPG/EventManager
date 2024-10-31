@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function ViewEvent() {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [registers, setRegisters] = useState([]);
     const { eventId } = useParams();
-    // Fetch events and registrations from the API when the component mounts
+
     useEffect(() => {
         fetchEvents();
         fetchRegistrations();
-    }, []); // Empty dependency array to run only on mount
+    }, []);
 
     const fetchEvents = async () => {
         try {
@@ -51,13 +50,32 @@ function ViewEvent() {
     };
 
     const handleBack = () => {
-        navigate('/createEvent'); // Redirect to the createEvent page
+        navigate('/createEvent');
     };
 
-    // Function to format date
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const updateRegistration = async (registrationId, updatedFields) => {
+        try {
+            const response = await fetch(`http://localhost:4000/api/registrations/${registrationId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(updatedFields)
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update registration: ' + response.statusText);
+            }
+            const updatedRegistration = await response.json();
+            console.log("Updated registration:", updatedRegistration);
+        } catch (error) {
+            console.error('Error updating registration:', error);
+        }
     };
 
     const handleAttendanceChange = (registrationId) => {
@@ -68,6 +86,8 @@ function ViewEvent() {
                     : reg
             )
         );
+        const updatedAttendance = !registers.find(reg => reg.registration_id === registrationId).attendance;
+        updateRegistration(registrationId, { attendance: updatedAttendance });
     };
 
     const handleScoreChange = (registrationId, value) => {
@@ -78,12 +98,7 @@ function ViewEvent() {
                     : reg
             )
         );
-    };
-
-    const handleSave = () => {
-        // Logic to save attendance and scores to the API
-        console.log("Save data:", registers);
-        // You can implement the save functionality here, e.g., an API call to update the database.
+        updateRegistration(registrationId, { score: value });
     };
 
     return (
@@ -105,7 +120,6 @@ function ViewEvent() {
                 </thead>
                 <tbody>
                     {registers.map((registration) => {
-                        // Find the event associated with the registration
                         const event = events.find(event => event._id === registration.event_id);
 
                         return (
@@ -138,10 +152,7 @@ function ViewEvent() {
             </table>
 
             <div className="d-flex justify-content-end mt-4" style={{ gap: '10px' }}>
-                <Button variant="success" onClick={handleSave}>
-                    Save
-                </Button>
-                <Button variant="danger" onClick={handleBack}>
+                <Button variant="success" onClick={handleBack}>
                     Go Back
                 </Button>
             </div>

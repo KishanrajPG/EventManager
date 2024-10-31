@@ -56,7 +56,7 @@ function CreateEvent() {
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this event?');
         if (!confirmDelete) return;
-
+    
         try {
             const response = await fetch(`http://localhost:4000/api/events/${id}`, {
                 method: 'DELETE',
@@ -64,17 +64,23 @@ function CreateEvent() {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+    
+            const data = await response.json(); // Parse the JSON response
+    
             if (!response.ok) {
-                throw new Error('Failed to delete event: ' + response.statusText);
+                // Display the error message from the backend
+                window.alert(data.message || 'Error deleting event');
+                return;
             }
-
+    
             setEvents(events.filter(event => event._id !== id));
             console.log('Event deleted successfully');
         } catch (error) {
             console.error('Error deleting event:', error);
+            window.alert('An error occurred while deleting the event.');
         }
     };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, date, type, description } = currentEvent;
