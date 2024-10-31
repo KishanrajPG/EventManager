@@ -34,6 +34,12 @@ function CreateEvent() {
             console.error('Error fetching events:', error);
         }
     };
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+    
     const handleCreate = () => {
         setCurrentEvent(null); // Reset for new event
         setIsEditing(false); // Set to create mode
@@ -153,7 +159,7 @@ function CreateEvent() {
                     {events.map(event => (
                         <tr key={event._id}>
                             <td>{event.name}</td>
-                            <td>{event.date}</td>
+                            <td>{formatDate(event.date)}</td>
                             <td>{event.type}</td>
                             <td>{event.description}</td>
                             <td>

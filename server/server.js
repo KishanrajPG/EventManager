@@ -176,7 +176,7 @@ app.post('/api/register-student', authenticateToken, async (req, res) => {
                         html: `
                             <p>Hello,</p>
                             <p>We noticed that you were invited to participate in an event on our platform but haven't registered yet. Please click the link below to register and stay updated:</p>
-                            <a href="https://your-event-management-site.com/register">Register Now</a>
+                            <a href="https://eventmanagerfrontend.onrender.com">Register Now</a>
                             <p>Thank you!</p>
                         `
                     };
