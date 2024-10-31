@@ -68,6 +68,12 @@ const Login = () => {
                     <Link to="/register">Don't have an account? Register here</Link>
                 </div>
             </form>
+            <div className="footer-info mt-4 text-center">
+                <p>Made by Kishanraj PG using MERN Stack</p>
+                <p>Email: <a href="mailto:kish9723@gmail.com">kish9723@gmail.com</a></p>
+                <p>Phone: <a href="tel:+919964693517">+91 9964693517</a></p>
+                <p><a href="https://www.linkedin.com/in/kishanrajpg/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+            </div>
         </div>
     );
 };
