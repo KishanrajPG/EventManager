@@ -24,7 +24,7 @@ function Home() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch('https://eventmanagerbackend-bbxp.onrender.com/api/events', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/events`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -42,7 +42,7 @@ function Home() {
 
     const fetchRegistrations = async () => {
         try {
-            const response = await fetch('https://eventmanagerbackend-bbxp.onrender.com/api/registrations', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/registrations`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -77,7 +77,7 @@ function Home() {
           // Add the user's email to the candidateEmails array
           const updatedEmails = [...emails, userEmail];
   
-          const response = await fetch(`https://eventmanagerbackend-bbxp.onrender.com/api/register-student`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/register-student`, {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',

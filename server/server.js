@@ -7,6 +7,7 @@ const app = express();
 const cors = require('cors'); // Import CORS
 const nodemailer = require('nodemailer');
 const PORT = process.env.PORT || 4000;
+require('dotenv').config();
 
 app.use(cors());
 
@@ -146,8 +147,8 @@ const transporter = nodemailer.createTransport({
     port: 587, // Port for SMTP
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'kishanrajp.g.permukha@gmail.com', // Your email address
-        pass: 'mnvb ckvg pscw juhi' 
+        user: process.env.EMAIL_ADDRESS, 
+        pass: process.env.EMAIL_PASSWORD 
     }
 });
 
@@ -317,6 +318,7 @@ app.put('/api/registrations/:registrationId', authenticateToken, async (req, res
 
 
 // Connect to MongoDB and start the server
-mongoose.connect('mongodb+srv://Kishanrajpg:EventDB%402024@eventdb.kuq2x.mongodb.net/?retryWrites=true&w=majority&appName=EventDB')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
     .catch(err => console.log(err));
+
