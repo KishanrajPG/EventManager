@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Auth.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './Authcontext'; // Import the useAuth hook
+import { useAuth } from './Authcontext';
 
 const Login = () => {
-    const { setRole } = useAuth(); // Get the setRole function from context
+    const { setRole } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -23,7 +23,7 @@ const Login = () => {
             localStorage.setItem('email', userEmail);
             localStorage.setItem('userid', userid);
 
-            setRole(role); // Update role in the context
+            setRole(role);
 
             if (role === 'student') {
                 navigate('/home');
@@ -37,6 +37,8 @@ const Login = () => {
     };
 
     return (
+        <div>
+        <h2 className="auth-title">Event Management System</h2>
         <div className="auth-container">
             <h2 className="auth-title">Login</h2>
             <form onSubmit={handleSubmit}>
@@ -74,6 +76,7 @@ const Login = () => {
                 <p>Phone: <a href="tel:+919964693517">+91 9964693517</a></p>
                 <p><a href="https://www.linkedin.com/in/kishanrajpg/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
             </div>
+        </div>
         </div>
     );
 };
