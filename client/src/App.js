@@ -26,45 +26,45 @@ const MainApp = () => {
   const { role, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+      return <div>Loading...</div>;
   }
 
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <Router>
+          <div className="App">
+              <Routes>
+                  <Route path="/" element={<Navigate to="/login" replace />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
 
-          {/* Protected routes */}
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                {role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createEvent"
-            element={
-              <ProtectedRoute>
-                {role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/viewEvent/:eventId"
-            element={
-              <ProtectedRoute>
-                {role === 'admin' ? <ViewEvent /> : <Navigate to="/home" replace />}
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
+                  {/* Protected routes */}
+                  <Route
+                      path="/home"
+                      element={
+                          <ProtectedRoute>
+                              {role === 'admin' ? <Navigate to="/createEvent" replace /> : <Home />}
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/createEvent"
+                      element={
+                          <ProtectedRoute>
+                              {role === 'admin' ? <CreateEvent /> : <Navigate to="/home" replace />}
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/viewEvent/:eventId"
+                      element={
+                          <ProtectedRoute>
+                              {role === 'admin' ? <ViewEvent /> : <Navigate to="/home" replace />}
+                          </ProtectedRoute>
+                      }
+                  />
+              </Routes>
+          </div>
+      </Router>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './Authcontext';
 
 function CreateEvent() {
     const navigate = useNavigate();
@@ -8,6 +9,7 @@ function CreateEvent() {
     const [events, setEvents] = useState([]);
     const [currentEvent, setCurrentEvent] = useState(null);
     const [isEditing, setIsEditing] = useState(false); // New state for tracking edit mode
+    const { setRole } = useAuth();
 
     // Fetch events from the API when the component mounts
     useEffect(() => {
@@ -50,7 +52,10 @@ function CreateEvent() {
         localStorage.removeItem('token'); // Clear the token from local storage
         localStorage.removeItem('role'); // Clear the token from local storage
 
-        navigate('/login'); // Redirect to the login page
+        setRole(null); // Clear role from context
+
+        // Navigate to login page
+        navigate('/login', { replace: true });
     };
 
     const handleClose = () => {

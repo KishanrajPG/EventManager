@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from './Authcontext';
 
 function Home() {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Home() {
     const [showModal, setShowModal] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState(null);
     const [candidateEmails, setCandidateEmails] = useState(['']);
+    const { setRole } = useAuth();
 
     useEffect(() => {
         console.log(localStorage.getItem("userid"));
@@ -19,8 +21,11 @@ function Home() {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-        navigate('/login');
-    };
+        setRole(null); // Clear role from context
+
+        // Navigate to login page
+        navigate('/login', { replace: true });
+        };
 
     const fetchEvents = async () => {
         try {

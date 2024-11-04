@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const User = require('./models/user'); // Assuming you have a User model defined
+const User = require('./models/user');
 const app = express();
 const cors = require('cors'); // Import CORS
 const nodemailer = require('nodemailer');
@@ -15,7 +15,6 @@ app.use(cors());
 app.use(express.json());
 
 // Your secret key (should be stored securely in environment variables)
-const JWT_SECRET = 'supersecretkey123456';
 
 app.post('/api/register', async (req, res) => {
     const { name, email, password, role } = req.body;
@@ -141,7 +140,7 @@ app.delete('/api/events/:id', async (req, res) => {
 
 
 const Registration = require('./models/registration'); // Import the Registration model
-const mailjet = require('node-mailjet').apiConnect('22f4ab37b8c7df6e8385e95f3848b7a9', 'ce220fff33f60e9cc834fce6c2dfbcdf'); // Replace with your Mailjet Secret Key
+// const mailjet = require('node-mailjet').apiConnect('22f4ab37b8c7df6e8385e95f3848b7a9', 'ce220fff33f60e9cc834fce6c2dfbcdf'); // Replace with your Mailjet Secret Key
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com', // Use your email provider's SMTP server
     port: 587, // Port for SMTP
